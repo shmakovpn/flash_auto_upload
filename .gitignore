@@ -1,3 +1,5 @@
 .ssh/
 .bash*
 .vim*
+*.swp
+.psql_history

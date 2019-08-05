@@ -2,7 +2,9 @@
 # Author: shmakovpn <shmakovpn@krw.rzd>
 # Date: 2019-08-02
 
+DIR="/media/flash"
 logger -p local0.info "'$0' flash device '$1' removed 0161392a-b4d1-11e9-ba84-080027858e30"
+
 if [[ -z $1 ]]; then
     echo "Error: command line argument \$1 does not present"
     logger -p local0.err "'$0' first command line argument does not present 0161392a-b4d1-11e9-ba84-080027858e30"
@@ -33,7 +35,6 @@ if [[ $? -eq 0 ]]; then
     fi
 fi
 
-DIR="/media/flash"
 if [[ ! -d ${DIR} ]]; then
     echo "Info: directory '${DIR}' does not exist. Creating it"
     mkdir -p ${DIR}
