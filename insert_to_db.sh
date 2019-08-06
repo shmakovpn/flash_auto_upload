@@ -42,7 +42,12 @@ fi
 # int count(int status)
 # returns count of records with status
 _count() {
-    psql -tc "SELECT COUNT(md5) from load_status WHERE md5='${MD5}' and status=$1 limit 1" | head -n 1 | sed 's/^\s*//'
+    PSQL_STATUS=`psql -tc "SELECT COUNT(md5) from load_status WHERE md5='${MD5}' and status=$1 limit 1" | head -n 1 | sed 's/^\s*//' 2>&1`
+    if [[ $? -ne 0 ]]; then
+        logger -sp "'$0'. Error DB. Could not select count(md5): ${PSQL_STATUS}"
+        exit 1
+    fi
+    echo ${PSQL_STATUS}
 }
 
 _rsync() {
@@ -51,7 +56,6 @@ _rsync() {
     OUT_PATH_AGG=''
     OUT_FILE_NAME=`echo ${OUT_FILE} | sed -re 's/^(.*\/)*//'`
     for i in "${OUT_PATH_ARR[@]}"; do
-        echo "i=${i}"
         RSYNC_STATUS=`rsync /dev/null rsync://${RSYNC_HOST}/${RSYNC_PATH}${OUT_PATH_AGG}${i}/ 2>&1`
         if [[ $? -ne 0 ]]; then
             logger -sp local0.err "'$0'. Error rsync could not create directory '${OUT_PATH_AGG}${i}/': ${RSYNC_STATUS}"
