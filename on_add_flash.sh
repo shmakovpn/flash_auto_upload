@@ -38,6 +38,9 @@ if [[ ! -d ${DIR}/$1 ]]; then
     fi
 fi
 
+chown :autoload ${DIR}/$1
+chmod g+w ${DIR}/$1
+
 mount -l | grep -Pi "^/dev/$1"
 if [[ $? -eq 0 ]]; then
     echo "Error: '/dev/$1' already mounted" >&2
